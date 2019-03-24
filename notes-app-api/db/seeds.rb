@@ -7,5 +7,15 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Note.destroy_all
+Tag.destroy_all
+
+tags = Faker::Hipster.words(500)
+
+100.times { Tag.create(name: tags.sample) }
 
 50.times { Note.create(title: Faker::Book.title, content: Faker::Lorem.words(500).join(' ')) }
+
+3.times { Note.all.each { |note| note.tags << Tag.all.sample } }
+
+
+puts "Wooohoo! seeding was successful!"

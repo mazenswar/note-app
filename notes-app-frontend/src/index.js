@@ -19,9 +19,9 @@ const getNotes = () => {
   });
 }
 //////////////////  CREATE AND RENDER A NEW NOTE //////////////////////
-const addNote = (newNoteTitle, newNoteContent) => {
-  NoteAdapter.addNewNote(newNoteTitle, newNoteContent).then(note => {
-    let newNote = new Note(note.id, note.title, note.content);
+const addNote = (newNoteTitle, newNoteTags, newNoteContent) => {
+  NoteAdapter.addNewNote(newNoteTitle, newNoteTags, newNoteContent).then(note => {
+    let newNote = new Note(note.id, note.title, note.content, note.tags);
     notesUlTag.append(newNote.renderNoteLI());
   })
 }
@@ -48,11 +48,15 @@ notesUlWrapper.addEventListener('click', (e) => {
 
 noteContentDiv.addEventListener('submit', (e) => {
   e.preventDefault();
-    const newNoteTitle = e.target.parentElement.querySelector('#new-note-title').value;
-    const newNoteContent = e.target.parentElement.querySelector('#new-note-content').value;
-    addNote(newNoteTitle, newNoteContent);
-    e.target.parentElement.querySelector('#new-note-title').value = "";
-    e.target.parentElement.querySelector('#new-note-content').value = "";
+  const newNoteTitle = e.target.title.value;
+  const newNoteTags = e.target.tags.value;
+  const newNoteContent = e.target.content.value;
+
+  addNote(newNoteTitle, newNoteTags, newNoteContent);
+
+  e.target.title.value = "";
+  e.target.tags.value = "";
+  e.target.content.value = "";
 })
 
 //////////////////////////////   Edit and Delete Note   /////////////////////////
@@ -91,12 +95,14 @@ noteContentDiv.addEventListener('click', (e) => {
       const noteLi = document.querySelector(`li[data-id~="${noteId}"]`);
       const noteObj = Note.findNote(noteId);
       const newNoteTitle = e.target.parentElement.querySelector('#edit-note-title').value;
+      const newNoteTags = e.target.parentElement.querySelector('#edit-note-tags').value;
       const newNoteContent = e.target.parentElement.querySelector('#edit-note-content').value;
-      if (newNoteContent != noteObj.content || newNoteTitle != "") {
-        NoteAdapter.patchNote(noteId, newNoteTitle, newNoteContent).then(response => {
+      if (newNoteContent != noteObj.content || newNoteTitle != "" || newNoteTags != "") {
+        NoteAdapter.patchNote(noteId, newNoteTitle, newNoteTags, newNoteContent).then(response => {
             let noteToUpdate = Note.findNote(noteId)
             noteToUpdate.title = response.title;
             noteToUpdate.content = response.content;
+            noteToUpdate.tags = response.tags;
             const updatedNote = noteToUpdate;
             updatedNote.renderNoteContent()
             noteLi.innerText = noteObj.title;

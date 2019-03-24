@@ -11,8 +11,9 @@ class Note {
     return `
     <form class="new-note-wrapper">
       <input type="submit" id="save-button" name="save-note"></input>
-      <input required id="new-note-title" type="text" name="note-title" placeholder="Note Title">
-      <textarea required id="new-note-content" name="note-content" placeholder="Note Content" rows="30" cols="80"></textarea>
+      <input required id="new-note-title" type="text" name="title" placeholder="Note Title">
+      <input type="text" id="new-note-tags" name="tags" placeholder="Enter tags seperated by spaces"></input>
+      <textarea required id="new-note-content" name="content" placeholder="Note Content" rows="30" cols="80"></textarea>
     </form>`
   }
 
@@ -54,6 +55,7 @@ class Note {
     <div data-id="${this.id}" id="edit-note-form">
       <label for="edit-note-title">Title</label>
       <input type="text" id="edit-note-title" name="edit-note-title" placeholder="${this.title}"></input>
+      <input type="text" id="edit-note-tags" name="tags" placeholder="${this.parseTagName()}"></input>
       <label for="edit-note-content">Content</label>
       <textarea id="edit-note-content" name="edit-note-content" rows="30" cols="80">${this.content}</textarea>
     </div>
@@ -97,6 +99,12 @@ class Note {
     return searchList;
   }
 
+
+  parseTagName() {
+    let str = "";
+    this.tags.forEach(tag => str += `${tag.name} `);
+    return str;
+  }
 
 ////////
 }

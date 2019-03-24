@@ -12,12 +12,15 @@ class Api::V1::NotesController < ApplicationController
 
   def create
     @note = Note.create(note_params)
+    @note.create_tags(params[:tags])
     render json: @note
   end
 
   def update
     @note = Note.find(params[:id])
     @note.update(note_params)
+    @note.tags.destroy_all
+    @note.create_tags(params[:tags])
     render json: @note
   end
 
